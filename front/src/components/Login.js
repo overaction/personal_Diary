@@ -67,6 +67,7 @@ const Login = () => {
                     value={value.password}
                     error={errors.password}
                     onChange={onChange}
+                    type="password"
                 />
                 <Button type="submit" primary>
                     Login

@@ -43,6 +43,7 @@ const CreatePost = () => {
             body: formData
         })
         history.push('/')
+        history.go(0)
     }
     return (
         <Form onSubmit={onSubmit} noValidate>

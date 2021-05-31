@@ -62,6 +62,7 @@ const Register = () => {
                     value={value.password}
                     error={errors.password}
                     onChange={onChange}
+                    type="password"
                 />
                 <Form.Input 
                     label="confirmPassword" 
@@ -70,6 +71,7 @@ const Register = () => {
                     value={value.confirmPassword}
                     error={errors.confirmPassword} 
                     onChange={onChange}
+                    type="password"
                 />
                 <Button type="submit" primary>
                     Submit

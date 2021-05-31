@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Header, Icon, Image, Segment, Popup } from 'semantic-ui-react';
+import { Button, Header, Icon, Image, Segment, Popup, Dimmer, Loader } from 'semantic-ui-react';
 import moment from 'moment'
 import Editing from '../utils/Editing';
 import { AuthContext } from '../context/auth';
@@ -11,7 +11,7 @@ const Home = () => {
     const [currentDiary, setCurrentDiary] = useState()
     const [diaries, setDiaries] = useState([])
     const fetchDiaries = async () => {
-        const res = await fetch(`${API}/kmc04`, {
+        const res = await fetch(`${API}/${JSON.parse(localStorage.getItem('userData')).username}`, {
             method:'GET',
             headers: {
                 //'Content-Type': 'multipart/form-data'
@@ -20,6 +20,7 @@ const Home = () => {
         const data = await res.json();
         console.log(data);
         setDiaries(data);
+        console.log(context)
     }
     
     async function deleteDiary(postId) {
@@ -32,7 +33,7 @@ const Home = () => {
     }
     
     useEffect(() => {
-        fetchDiaries()
+        if(localStorage.getItem('userData')) fetchDiaries()
     },[])
 
     const openEditor = (diary) => {
@@ -47,55 +48,63 @@ const Home = () => {
                 editing ? (
                     <Editing diary={currentDiary} editing={editing}/>
                 ) : (
-                    diaries.map((item) => (
-                        <Segment style={{ margin: 0, paddingLeft: 20 }}>
-                            <Header
-                                as="h3"
-                                style={{
-                                    margin: 0,
-                                    padding: 10,
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <div>
-                                    <Icon disabled name="time" />
-                                    {moment(item.date).fromNow(true)} ago
-                                </div>
-                                <Button.Group>
-                                    <Button positive onClick={() => openEditor(item)}>Edit</Button>
-                                    <Button.Or />
-                                    <Button
-                                        negative
-                                        onClick={() => deleteDiary(item._id)}
-                                    >
-                                        Delete
-                                    </Button>
-                                </Button.Group>
-                            </Header>
-                            <h1>
-                                <Icon
-                                    disabled
-                                    name="address book outline"
-                                    style={{ marginLeft: 9 }}
-                                />
-                                {item.text}
-                            </h1>
-                            {item.images.length ? (
-                                <Image.Group size="medium">
-                                    {item.images.map((image) => (
-                                        <Image src={image} />
-                                    ))}
-                                </Image.Group>
-                            ) : (
-                                ""
-                            )}
+                    diaries.length ? (
+                        diaries.map((item) => (
+                            <Segment style={{ margin: 0, paddingLeft: 20 }}>
+                                <Header
+                                    as="h3"
+                                    style={{
+                                        margin: 0,
+                                        padding: 10,
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                    }}
+                                >
+                                    <div>
+                                        <Icon disabled name="time" />
+                                        {moment(item.date).fromNow(true)} ago
+                                    </div>
+                                    <Button.Group>
+                                        <Button positive onClick={() => openEditor(item)}>Edit</Button>
+                                        <Button.Or />
+                                        <Button
+                                            negative
+                                            onClick={() => deleteDiary(item._id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Button.Group>
+                                </Header>
+                                <h1>
+                                    <Icon
+                                        disabled
+                                        name="address book outline"
+                                        style={{ marginLeft: 9 }}
+                                    />
+                                    {item.text}
+                                </h1>
+                                {item.images.length ? (
+                                    <Image.Group size="medium">
+                                        {item.images.map((image) => (
+                                            <Image src={image} />
+                                        ))}
+                                    </Image.Group>
+                                ) : (
+                                    ""
+                                )}
+                            </Segment>
+                    )
+                    )) : <Segment>
+                            <Dimmer active inverted>
+                            <Loader size='large' style={{fontSize: 30}}>There's no Diary ...</Loader>
+                            </Dimmer> 
+                            <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+                            <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
                         </Segment>
-                    ))
                 )
             ) : (
                 <div style={{textAlign:'center'}}>
-                    <h1 style={{marginBottom: 100}}>Personal Diary Service</h1>
+                    <h1 style={{marginBottom: 100, marginTop: 100}}>Welcome to Personal Diary Service</h1>
                     <h2>How to use?</h2>
                     <div>
                         <div>
@@ -115,7 +124,7 @@ const Home = () => {
                                 hideOnScroll
                             />
                         </div>
-                        <a href="http://naver.com"><Button style={{marginTop: 10}} circular color='github' icon='github' size="big"/></a>
+                        <a href="https://github.com/overaction/personal_Diary"><Button style={{marginTop: 400}} circular color='github' icon='github' size="big"/></a>
                     </div>
                 </div>
             )

@@ -59,11 +59,11 @@ async def loginUser():
         return errors
 
     user = db.find_one({"username": username})
-    if user:
+    if user['password'] == password:
         return {"success": "user login successfully"}
     else:
         return {
-            'username': "user not exists"
+            'password' : "Password does not match"
         }
 
 # 포스트생성

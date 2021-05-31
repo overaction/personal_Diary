@@ -6,10 +6,13 @@ import { AuthContext } from '../context/auth';
 const Menubar = () => {
     const context = useContext(AuthContext);
 
-    const pathname = window.location.pathname;
+    let pathname = window.location.pathname;
     const path = pathname === '/' ? 'home' : pathname.substr(1);
     const [activeItem, setActiveItem] = useState(path);
-    const handleItemClick = (e, {name}) => setActiveItem(name);
+    const handleItemClick = (e, {name}) => {
+        setActiveItem(name);
+        console.log(name)
+    }
 
     const contextCheck = () => {
         const userDataJSON = JSON.parse(localStorage.getItem('userData'));
@@ -33,7 +36,7 @@ const Menubar = () => {
                 name={context.user}
                 content={context.user}
                 onClick={handleItemClick}
-                active={activeItem === context.user}
+                active={activeItem === context.user || activeItem === 'home' || activeItem === 'login'}
                 as={Link}
                 to="/"
             />
